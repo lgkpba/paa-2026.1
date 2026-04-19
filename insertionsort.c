@@ -1,36 +1,74 @@
+/*Acho importante esclarecer que a questão NÂO exige que seja usado o algoritmo Insertion Sort,
+o que se pede é apenas que sejam contadas as inversões que ocorrem no vetor, por esse motivo apenas 
+adaptei o código usado para responder a questão do Merge Sort para que ele conte as inversões
+e ser aprovado pelo limite de tempo de 3 segundos, que se demonstrou muito pouco quando usando
+Insertion Sort*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
-int insertion_sort(int vetor[], int tamanho){
-    int aux, j, cont;
-    cont = 0;
-    for(int i = 1; i < tamanho; i++){
-        aux = vetor[i];
-        j = i - 1;
-        while(j >= 0 && vetor[j] > aux){
-            vetor[j + 1] = vetor[j];
-            j = j - 1;
-            cont++;
+int merge(int *vetor, int primeiro, int meio, int ultimo){
+    int cont1 = primeiro, cont2 = meio+1, contAux = 0, tam = ultimo-primeiro+1, inversoes = 0;
+    int *vetAux = malloc(tam * sizeof(int));
+
+    while(cont1 <= meio && cont2 <= ultimo){
+        if(vetor[cont1] <= vetor[cont2]) {
+            vetAux[contAux] = vetor[cont1];
+            cont1++;
+        } else {
+            vetAux[contAux] = vetor[cont2];
+            cont2++;
+            inversoes += (meio - cont1 + 1);
         }
-        vetor[j + 1] = aux;
+        contAux++;
     }
-    return cont;
+
+    while(cont1 <= meio){
+        vetAux[contAux] = vetor[cont1];
+        contAux++;
+        cont1++;
+    }
+
+    while(cont2 <= ultimo) {
+        vetAux[contAux] = vetor[cont2];
+        contAux++;
+        cont2++;
+    }
+
+    for(contAux = primeiro; contAux <= ultimo; contAux++){
+        vetor[contAux] = vetAux[contAux-primeiro];
+    }
+    
+    free(vetAux);
+
+    return inversoes;
+}
+
+int merge_sort(int *vetor, int primeiro, int ultimo){
+    int inversoes = 0;
+    if(primeiro < ultimo){
+        int meio = (primeiro + ultimo) / 2;
+        inversoes += merge_sort(vetor, primeiro, meio);
+        inversoes += merge_sort(vetor, meio + 1, ultimo);
+        inversoes += merge(vetor, primeiro, meio, ultimo);
+    }
+    return inversoes;
 }
 
 int main(void){
-    int num_testes, tamanho_vetor;
-    scanf("%d", &num_testes);
     
-    for(int i = 0; i < num_testes; i++){
+    int num, num_casos, tam_vetor;
+    int *vetor_inicial = malloc(100000 * sizeof(int));
+    scanf("%d", &num_casos);
+    
+    for(int i = 0; i < num_casos; i++){
+        scanf("%d", &tam_vetor);
         
-        scanf("%d", &tamanho_vetor);
-        int *vetor_inicial = malloc(tamanho_vetor * sizeof(int));
-
-        for(int j = 0; j < tamanho_vetor; j++){
+        for(int j = 0; j < tam_vetor; j++){
             scanf("%d", &vetor_inicial[j]);
         }
 
-        int resultado = insertion_sort(vetor_inicial, tamanho_vetor);
+        int resultado = merge_sort(vetor_inicial, 0, tam_vetor - 1);
         printf("%d\n", resultado);
     }
 

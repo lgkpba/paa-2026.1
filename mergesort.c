@@ -6,7 +6,7 @@ void merge(int *vetor, int primeiro, int meio, int ultimo){
     int *vetAux = malloc(tam * sizeof(int));
 
     while(cont1 <= meio && cont2 <= ultimo){
-        if(vetor[cont1] < vetor[cont2]) {
+        if(vetor[cont1] <= vetor[cont2]) {
             vetAux[contAux] = vetor[cont1];
             cont1++;
         } else {
@@ -49,30 +49,19 @@ void merge_sort(int *vetor, int primeiro, int ultimo){
 
 int main(void){
     
-    int *vetor_inicial = NULL;
-    int capacidade = 10;
-    int tamanho = 0;
-    vetor_inicial = malloc(capacidade * sizeof(int));
-    int num;
+    int num, cont = 0;
+    int *vetor_inicial = malloc(100000 * sizeof(int));
 
     while(scanf("%d", &num) == 1){
-        if(tamanho == capacidade){
-            capacidade *=2;
-            vetor_inicial = realloc(vetor_inicial, capacidade * sizeof(int));
-        }
-        vetor_inicial[tamanho++] = num;
+        vetor_inicial[cont++] = num;
     }
 
-    for(int i = 0; i < tamanho; i++){
-        scanf("%d", &vetor_inicial[i]);
-    }
+    merge_sort(vetor_inicial, 0, cont - 1);
 
-    merge_sort(vetor_inicial, 0, tamanho - 1);
-
-    for(int j = 0; j < tamanho; j++){
+    for(int j = 0; j < cont; j++){
         printf("%d", vetor_inicial[j]);
         
-        if(j < tamanho - 1){
+        if(j < cont - 1){
             printf(" ");
         }
     }
