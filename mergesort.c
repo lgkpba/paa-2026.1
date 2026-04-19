@@ -49,9 +49,22 @@ void merge_sort(int *vetor, int primeiro, int ultimo){
 
 int main(void){
     
-    int tamanho;
-    scanf("%d", &tamanho);
-    int *vetor_inicial = malloc(tamanho * sizeof(int));
+    int *vetor_inicial = NULL;
+    int capacidade = 1;
+    int tamanho = 0;
+    vetor_inicial = malloc(capacidade * sizeof(int));
+    int num;
+
+    scanf("%d", &num);
+    vetor_inicial[tamanho] = num;
+
+    while(scanf("%d", &num) == 1){
+        if(tamanho == capacidade){
+            capacidade *=2;
+            vetor_inicial = realloc(vetor_inicial, capacidade * sizeof(int));
+        }
+        vetor_inicial[tamanho++] = num;
+    }
 
     for(int i = 0; i < tamanho; i++){
         scanf("%d", &vetor_inicial[i]);
