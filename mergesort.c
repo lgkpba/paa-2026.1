@@ -3,7 +3,7 @@
 
 void merge(int *vetor, int primeiro, int meio, int ultimo){
     int cont1 = primeiro, cont2 = meio+1, contAux = 0, tam = ultimo-primeiro+1;
-    int *vetAux = (int*)malloc(tam * sizeof(int));
+    int *vetAux = malloc(tam * sizeof(int));
 
     while(cont1 <= meio && cont2 <= ultimo){
         if(vetor[cont1] < vetor[cont2]) {
