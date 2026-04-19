@@ -50,13 +50,10 @@ void merge_sort(int *vetor, int primeiro, int ultimo){
 int main(void){
     
     int *vetor_inicial = NULL;
-    int capacidade = 1;
+    int capacidade = 10;
     int tamanho = 0;
     vetor_inicial = malloc(capacidade * sizeof(int));
     int num;
-
-    scanf("%d", &num);
-    vetor_inicial[tamanho] = num;
 
     while(scanf("%d", &num) == 1){
         if(tamanho == capacidade){
@@ -73,8 +70,13 @@ int main(void){
     merge_sort(vetor_inicial, 0, tamanho - 1);
 
     for(int j = 0; j < tamanho; j++){
-        printf("%d\n", vetor_inicial[j]);
+        printf("%d", vetor_inicial[j]);
+        
+        if(j < tamanho - 1){
+            printf(" ");
+        }
     }
+    printf("\n");
 
     free(vetor_inicial);
 
