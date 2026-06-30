@@ -1,49 +1,97 @@
 #include <stdio.h>
 
-void swap(int* a, int* b) {
+#define LIMIAR 16
+
+void swap(int *a, int *b) {
     int t = *a;
     *a = *b;
     *b = t;
 }
 
-int particionar(int vetor[], int min, int max){
-    int pivo = vetor[max];
-    int i = min - 1;
+void insertionSort(int v[], int ini, int fim) {
+    for (int i = ini + 1; i <= fim; i++) {
+        int chave = v[i];
+        int j = i - 1;
 
-    for (int j = min; j <= max - 1; j++){
-        if (vetor[j] < pivo) {
+        while (j >= ini && v[j] > chave) {
+            v[j + 1] = v[j];
+            j--;
+        }
+
+        v[j + 1] = chave;
+    }
+}
+
+int medianaDeTres(int v[], int a, int b, int c) {
+    if (v[a] > v[b]) swap(&v[a], &v[b]);
+    if (v[a] > v[c]) swap(&v[a], &v[c]);
+    if (v[b] > v[c]) swap(&v[b], &v[c]);
+
+    // A mediana fica em b
+    return v[b];
+}
+
+int particionar(int v[], int ini, int fim) {
+
+    int meio = ini + (fim - ini) / 2;
+    int pivo = medianaDeTres(v, ini, meio, fim);
+
+    int i = ini - 1;
+    int j = fim + 1;
+
+    while (1) {
+
+        do {
             i++;
-            swap(&vetor[i], &vetor[j]);
+        } while (v[i] < pivo);
+
+        do {
+            j--;
+        } while (v[j] > pivo);
+
+        if (i >= j)
+            return j;
+
+        swap(&v[i], &v[j]);
+    }
+}
+
+void quickSort(int v[], int ini, int fim) {
+
+    while (ini < fim) {
+
+        if (fim - ini < LIMIAR) {
+            insertionSort(v, ini, fim);
+            return;
+        }
+
+        int p = particionar(v, ini, fim);
+
+        // Ordena primeiro o menor lado
+        if (p - ini < fim - p) {
+            quickSort(v, ini, p);
+            ini = p + 1;
+        } else {
+            quickSort(v, p + 1, fim);
+            fim = p;
         }
     }
-
-    swap(&vetor[i+1], &vetor[max]);
-    return i + 1;
 }
 
-void quickSort(int vetor[], int min, int max){
-    if (min < max) {
-        int pi = particionar(vetor, min, max);
+int main() {
 
-        quickSort(vetor, min, pi-1);
-        quickSort(vetor, pi+1, max);
-    }
-}
+    int n;
+    scanf("%d", &n);
 
-int main(void){
-    int tam_vetor;
-    scanf("%d", &tam_vetor);
-    int vetor[tam_vetor]; 
-    
-    for (int i = 0; i < tam_vetor; i++) {
-        scanf("%d", &vetor[i]);
-    }
-    
-    quickSort(vetor, 0, (tam_vetor / sizeof(vetor[0])) - 1);
+    int v[n];
 
-    for (int j = 0; j < tam_vetor; j++) {
-        printf("%d\n", vetor[j]);
-    }
+    for (int i = 0; i < n; i++)
+        scanf("%d", &v[i]);
+
+    quickSort(v, 0, n - 1);
+
+    for (int i = 0; i < n; i++)
+        printf("%d\n", v[i]);
 
     return 0;
 }
